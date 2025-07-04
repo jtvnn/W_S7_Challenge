@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import * as Yup from 'yup';
 
 // 👇 Here are the validation errors you will use with Yup.
 const validationErrors = {
@@ -8,7 +9,9 @@ const validationErrors = {
 }
 
 // 👇 Here you will create your schema.
+const schema = Yup.object().shape({
 
+})
 // 👇 This array could help you construct your checkboxes using .map in the JSX.
 const toppings = [
   { topping_id: '1', text: 'Pepperoni' },
@@ -39,6 +42,9 @@ export default function Form() {
           <select id="size">
             <option value="">----Choose Size----</option>
             {/* Fill out the missing options */}
+            <option value="Small">Small</option>
+            <option value="Medium">Medium</option>
+            <option value="Large">Large</option>
           </select>
         </div>
         {true && <div className='error'>Bad value</div>}
