@@ -29,8 +29,8 @@ describe('Sprint 7 Challenge Learner Tests', () => {
     [5] renders a text that reads "JavaScript is pretty awesome"
     [6] renders a text that includes "javaScript is pretty" (use exact = false)
   */
-  test('you can comment out this test', () => {
-    expect(true).toBe(false)
+  //test('you can comment out this test', () => {
+  //  expect(true).toBe(false)
   })
 })
 
