@@ -44,7 +44,6 @@ export default function Form() {
   const [touched, setTouched] = useState({});
   const [submitStatus, setSubmitStatus] = useState(null);
   const [isValid, setIsValid] = useState(false);
-  const [submitAttempted, setSubmitAttempted] = useState(false);
 
   // going to validate on all changes
   useEffect(() => {
@@ -87,7 +86,6 @@ export default function Form() {
   // going to handle submission
   const handleSubmit = async (e) => {
     e.preventDefault(); // prevent reloading
-    setSubmitAttempted(true);
     schema
       .validate(values, { abortEarly: false }) // don't stop early after finding error
       .then(() => {
@@ -97,7 +95,6 @@ export default function Form() {
         setSubmittedToppings(values.toppings);
         setValues({ fullName: "", size: "", toppings: [] });
         setTouched({});
-        setSubmitAttempted(false);
       })
       .catch(() => {
         setSubmitStatus("failure");
@@ -147,7 +144,7 @@ export default function Form() {
           />
         </div>
 
-        {(touched.fullName || submitAttempted) && errors.fullName && (
+        {(touched.fullName) && errors.fullName && (
           <div className="error">{errors.fullName}</div>
         )}
 
@@ -173,7 +170,7 @@ export default function Form() {
           </select>
         </div>
 
-        {(touched.size || submitAttempted) && errors.size && (
+        {(touched.size) && errors.size && (
           <div className="error">{errors.size}</div>
         )}
 
