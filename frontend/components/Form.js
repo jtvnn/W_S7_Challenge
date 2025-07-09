@@ -47,25 +47,16 @@ export default function Form() {
 
   // going to validate on all changes
   useEffect(() => {
-    schema
-      .validate(values, { abortEarly: false })
-      .then(() => {
-        setErrors({});
-        setIsValid(true);
-      })
-      .catch((err) => {
-        const errObj = {};
-        err.inner.forEach((e) => {
-          errObj[e.path] = e.message;
-        });
-        setErrors(errObj);
-        setIsValid(false);
-      });
+    schema.isValid(values).then((isValid) => {
+      setIsValid(isValid);
+    });
   }, [values]);
 
   // going to handle input changes
   const handleChange = (e) => {
     const { name, value, type } = e.target;
+    setTouched((prev) => ({ ...prev, [e.target.name]: true }));
+    console.log(name, value);
     if (type === "checkbox") {
       setValues((prev) => {
         let newToppings = prev.toppings.includes(value)
@@ -75,12 +66,20 @@ export default function Form() {
       });
     } else {
       setValues((prev) => ({ ...prev, [name]: value }));
+      const newValues = { ...values, [name]: value.trim() };
+      schema
+        .validate(newValues, { abortEarly: false })
+        .then(() => {
+          setErrors({});
+        })
+        .catch((err) => {
+          const errObj = {};
+          err.inner.forEach((e) => {
+            errObj[e.path] = e.message;
+          });
+          setErrors(errObj);
+        });
     }
-  };
-
-  // going to handle touched blur
-  const handleBlur = (e) => {
-    setTouched((prev) => ({ ...prev, [e.target.name]: true }));
   };
 
   // going to handle submission
@@ -140,15 +139,12 @@ export default function Form() {
             type="text"
             value={values.fullName}
             onChange={handleChange}
-            onBlur={handleBlur}
           />
         </div>
 
-        {(touched.fullName) && errors.fullName && (
+        {touched.fullName && errors.fullName && (
           <div className="error">{errors.fullName}</div>
         )}
-
-        {/*errors.fullName && <div className="error">{errors.fullName}</div>*/}
       </div>
 
       <div className="input-group">
@@ -160,7 +156,6 @@ export default function Form() {
             name="size"
             value={values.size}
             onChange={handleChange}
-            onBlur={handleBlur}
           >
             <option value="">----Choose Size----</option>
             {/* Fill out the missing options */}
@@ -170,11 +165,9 @@ export default function Form() {
           </select>
         </div>
 
-        {(touched.size) && errors.size && (
+        {touched.size && errors.size && (
           <div className="error">{errors.size}</div>
         )}
-
-        {/*errors.size && <div className="error">{errors.size}</div>*/}
       </div>
 
       <div className="input-group">
